@@ -1,1 +1,23 @@
-<p>events works!</p>
+<div class="container-fluid py-5">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Severity</th>
+        <th scope="col">Event Type</th>
+        <th scope="col">Database</th>
+        <th scope="col">Timestamp</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (event of events | async; track event.id) {
+      <tr>
+        <td>{{ event.severity }}</td>
+        <td>{{ EventType[event.eventType] }}</td>
+        <td>{{ event.database }}</td>
+        <td>{{ event.timestamp | date }}</td>
+      </tr>
+      }
+    </tbody>
+  </table>
+  <pre>Last updated: (date)</pre>
+</div>
