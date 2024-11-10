@@ -9,9 +9,9 @@
       </tr>
     </thead>
     <tbody>
-      @for (event of events | async; track event.id) {
+      @for (event of events(); track event.id) {
       <tr>
-        <td>{{ event.severity }}</td>
+        <td>{{ EventSeverity[event.severity] }}</td>
         <td>{{ EventType[event.eventType] }}</td>
         <td>{{ event.database }}</td>
         <td>{{ event.timestamp | date }}</td>

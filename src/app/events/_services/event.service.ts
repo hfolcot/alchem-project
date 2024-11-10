@@ -1,45 +1,86 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { Observable, of, tap } from 'rxjs';
-import { EventType } from '../_enums/EventType.enum';
-import { EventSeverity } from '../_enums/EventSeverity.enum';
+import { map, Observable, of, tap } from 'rxjs';
 import { IEvent } from '../_models/event';
-
-const DUMMY_EVENTS: IEvent[] = [
-  {
-    id: 0,
-    eventType: EventType.DiskIOSpike,
-    timestamp: new Date().toISOString(),
-    database: "DB_Prod_02",
-    severity: EventSeverity.High
-  },
-  {
-    id: 1,
-    eventType: EventType.DiskIOSpike,
-    timestamp: new Date().toISOString(),
-    database: "DB_Prod_02",
-    severity: EventSeverity.Medium
-  },
-  {
-    id: 2,
-    eventType: EventType.DiskIOSpike,
-    timestamp: new Date().toISOString(),
-    database: "DB_Prod_02",
-    severity: EventSeverity.Critical
-  }
-]
+import { HubConnection, HubConnectionBuilder, HubConnectionState } from '@microsoft/signalr';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EventService {
+  private readonly baseUrl: string = "http://localhost:5000/api";
+  private readonly hubsUrl: string = "http://localhost:5000/hubs";
+  private hubConnection?: HubConnection;
   private readonly http = inject<HttpClient>(HttpClient);
+
+  private events = signal<IEvent[]>([]);
+  events$ = this.events.asReadonly();
 
   constructor() { }
 
+  createHubConnection(): void {
+    this.hubConnection = new HubConnectionBuilder()
+    .withUrl(this.hubsUrl + '/dbevents')
+    .withAutomaticReconnect()
+    .build();
+
+    this.hubConnection.start().catch(error => console.warn(error));
+
+    this.getHistoricEvents();
+
+    this.subscribeToFutureEvents();
+  }
+
+  endHubConnection(): void {
+    if(this.hubConnection?.state === HubConnectionState.Connected) {
+      this.hubConnection.stop();
+    }
+  }
+
   getEvents(): Observable<IEvent[]> {
-    
-    return of(DUMMY_EVENTS);
-    return this.http.get<IEvent[]>(`/api/events`);
+    return this.http.get<IEvent[]>(`${this.baseUrl}/dbevents`).pipe(map(
+      events => {
+        return this.sortedEvents(events);
+      }
+    ));
+  }
+
+  private sortedEvents(events: IEvent[]): IEvent[] {
+    events.sort((e1, e2) => {
+      if(e1.severity > e2.severity) {
+        return -1;
+      }
+      if(e2.severity > e1.severity) {
+        return 1;
+      }
+      return 0;
+    });
+
+    return events;
+  }
+
+  private getHistoricEvents(): void {
+    if(!this.hubConnection) {
+      return;
+    }
+
+    this.hubConnection.on("ReceiveAllDbEvents", events => {
+      this.events.set(this.sortedEvents(events));
+    })
+  }
+
+  private subscribeToFutureEvents(): void {
+    if(!this.hubConnection) {
+      return;
+    }
+
+    this.hubConnection.on("ReceiveDbEvent", event => {
+      this.events.update(events => {
+        return this.sortedEvents([
+          ...events,
+          event
+        ])
+      })
+    })
   }
 }
