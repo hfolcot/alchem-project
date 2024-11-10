@@ -1,13 +1,13 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { EventService } from './_services/event.service';
-import { AsyncPipe, DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { EventType } from './_enums/EventType.enum';
 import { EventSeverity } from './_enums/EventSeverity.enum';
 
 @Component({
   selector: 'app-events',
   standalone: true,
-  imports: [AsyncPipe, DatePipe],
+  imports: [DatePipe],
   templateUrl: './events.component.html',
   styleUrl: './events.component.scss'
 })
