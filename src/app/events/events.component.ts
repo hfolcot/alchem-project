@@ -17,6 +17,7 @@ export class EventsComponent {
 
   lastUpdated = signal<Date>(new Date());
   lastUpdatedEffect = effect(() => {
+    this.events();
     this.lastUpdated.set(new Date());
   }, {
     allowSignalWrites: true
