@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { EventService } from './_services/event.service';
 import { DatePipe } from '@angular/common';
 import { EventType } from './_enums/EventType.enum';
@@ -14,6 +14,11 @@ import { EventSeverity } from './_enums/EventSeverity.enum';
 export class EventsComponent {
   private readonly eventService = inject<EventService>(EventService);
   events = this.eventService.events$;
+
+  lastUpdated = signal<Date>(new Date());
+  lastUpdatedEffect = effect(() => {
+    this.lastUpdated.set(new Date());
+  })
 
   EventType = EventType;
   EventSeverity = EventSeverity;

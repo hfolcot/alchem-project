@@ -1,4 +1,6 @@
 <div class="container-fluid py-5">
+  
+  <pre>Last updated: {{ lastUpdated() | date : 'HH:mm:ss dd MMMM YYYY'  }}</pre>
   <table class="table">
     <thead>
       <tr>
@@ -14,10 +16,9 @@
         <td>{{ EventSeverity[event.severity] }}</td>
         <td>{{ EventType[event.eventType] }}</td>
         <td>{{ event.database }}</td>
-        <td>{{ event.timestamp | date }}</td>
+        <td>{{ event.timestamp | date : 'HH:mm dd-MM-YYYY' }}</td>
       </tr>
       }
     </tbody>
   </table>
-  <pre>Last updated: (date)</pre>
 </div>

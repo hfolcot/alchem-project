@@ -47,10 +47,10 @@ export class EventService {
 
   private sortedEvents(events: IEvent[]): IEvent[] {
     events.sort((e1, e2) => {
-      if(e1.severity > e2.severity) {
+      if(e1.timestamp > e2.timestamp) {
         return -1;
       }
-      if(e2.severity > e1.severity) {
+      if(e2.timestamp > e1.timestamp) {
         return 1;
       }
       return 0;
