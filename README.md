@@ -2,26 +2,25 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.1.0.
 
-## Development server
+## Pre-requisites
+Minimum Node v18
+Angular CLI v18
+API installed and running locally ([Find it here](https://github.com/hfolcot/alchem-project-api))
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Running the project locally
+`npm install`
 
-## Code scaffolding
+`npm start`
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## About the project
+A management console that shows database activity with live updates.
 
-## Build
+To prevent repeated polling of an overloaded database, the project uses SignalR to subscribe to new database events.
+The only request that is made is for the initial load of historical events.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Potential UX improvements
+With more time, I would add search and filter functionality to the table so users can easily find specific events.
+I would also add pagination as the table would very quickly fill up otherwise.
 
-## Running unit tests
+I would also have liked to add a POST endpoint so that users can mark events as actioned, further enhancing usability as pending/completed actions could be separated cleanly.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
