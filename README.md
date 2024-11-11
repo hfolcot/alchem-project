@@ -4,7 +4,9 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Pre-requisites
 Minimum Node v18
+
 Angular CLI v18
+
 API installed and running locally ([Find it here](https://github.com/hfolcot/alchem-project-api))
 
 ## Running the project locally
